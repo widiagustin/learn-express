@@ -1,28 +1,23 @@
 const express = require('express')
 const app = express()
+const path = require('path')
+const productRouter = require('./app/product/routes')
+const logger = require('morgan')
 const port = process.env.PORT || 3000
 
-app.get('/', (req, res) => {
-  res.sendFile('./views/index.html', { root: __dirname })
-})
-
-app.get('/about', (req, res) => {
-  res.sendFile('./views/about.html', { root: __dirname })
-})
-
-app.get('/contact', (req, res) => {
-  res.sendFile('./views/contact.html', { root: __dirname })
-})
-
-app.get('/product/:id?', (req, res) => {
-  res.send(`Product ID: ${req.params.id} <br> Category ID : ${req.query.category}`)
-})
-
-app.use('/', (req, res) => {
+app.use(logger('dev'))
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use('/public', express.static(path.join(__dirname, 'uploads')))
+app.use('/api/v1', productRouter)
+app.use((req, res, next) => {
   res.status(404)
-  res.send('<h1> 404 page not found')
+  res.send({
+    status: 'failed',
+    message: `Resource ${req.originalUrl} Not Found`
+  })
 })
 
 app.listen(port, () => {
-  console.log(`You are listening on port ${port}`);
+  console.log(`You are listening on port http://localhost:${port}`);
 })
