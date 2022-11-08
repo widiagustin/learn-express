@@ -3,7 +3,7 @@ const app = express()
 const path = require('path')
 const productRouter = require('./app/product/routes')
 const logger = require('morgan')
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3200
 
 app.use(logger('dev'))
 app.use(express.urlencoded({ extended: true }))
